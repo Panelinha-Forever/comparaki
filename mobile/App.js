@@ -1,13 +1,14 @@
 import React from 'react';
 import Card from './src/components/Card';
+import Footer from './src/components/Footer';
 
-import { StyleSheet, Text, View, ScrollView, StatusBar } from 'react-native';
+import { ScrollView, StatusBar } from 'react-native';
 
-import { Header, Typography } from './src/styles/global';
+import { Header, Typography, Content, Container } from './src/styles/global';
 
 export default function App() {
   return (
-    <View>
+    <Container>
       <StatusBar
         barStyle='light-content'
         hidden={false}
@@ -25,7 +26,7 @@ export default function App() {
           Comparaki
         </Typography>
       </Header>
-      <View style={styles.container}>
+      <Content>
         <ScrollView showsVerticalScrollIndicator={false}>
           <Card />
           <Card />
@@ -35,17 +36,8 @@ export default function App() {
           <Card />
           <Card />
         </ScrollView>
-      </View>
-    </View>
+      </Content>
+      <Footer />
+    </Container>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingLeft: 20,
-    paddingRight: 20,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-});

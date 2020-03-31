@@ -18,3 +18,17 @@ export const Typography = styled.Text`
   margin-right: ${props => props.mr || 0};
   margin-top: ${props => props.mt || 0};
 `;
+
+export const Content = styled.View`
+  flex: 1;
+  padding-right: 20px;
+  padding-left: 20px;
+  align-content: center;
+  align-items: center;
+`;
+
+export const Container = styled.View`
+  height: 100%;
+  width: 100%;
+  flex: 1;
+`;
