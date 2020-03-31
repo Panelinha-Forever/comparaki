@@ -1,6 +1,7 @@
 import React from 'react';
 import Card from './src/components/Card';
 import Footer from './src/components/Footer';
+import Navbar from './src/components/Navbar';
 
 import { ScrollView, StatusBar } from 'react-native';
 
@@ -26,6 +27,8 @@ export default function App() {
           Comparaki
         </Typography>
       </Header>
+      <Navbar></Navbar>
+
       <Content>
         <ScrollView showsVerticalScrollIndicator={false}>
           <Card />

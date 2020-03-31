@@ -5,7 +5,6 @@ export const Header = styled.View`
   height: 100px;
   background: #2e5e96;
   justify-content: center;
-  margin-bottom: 10px;
 `;
 
 export const Typography = styled.Text`
