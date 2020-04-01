@@ -7,5 +7,5 @@ export const Container = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0 10px;
+  padding: 0 20px;
 `;

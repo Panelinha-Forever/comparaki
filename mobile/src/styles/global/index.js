@@ -20,6 +20,7 @@ export const Typography = styled.Text`
 
 export const Content = styled.View`
   flex: 1;
+  height: 100%;
   padding-right: 20px;
   padding-left: 20px;
   align-content: center;
@@ -30,4 +31,14 @@ export const Container = styled.View`
   height: 100%;
   width: 100%;
   flex: 1;
+`;
+
+export const Navbar = styled.View`
+  height: 8%;
+  /* border-bottom: 1px solid #ccc; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
 `;
