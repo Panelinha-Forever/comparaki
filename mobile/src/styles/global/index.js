@@ -21,8 +21,7 @@ export const Typography = styled.Text`
 export const Content = styled.View`
   flex: 1;
   height: 100%;
-  padding-right: 20px;
-  padding-left: 20px;
+  padding: 20px 20px 0 20px;
   align-content: center;
   align-items: center;
 `;

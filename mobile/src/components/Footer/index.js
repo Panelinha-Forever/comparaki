@@ -12,19 +12,19 @@ export default function Footer({ navigation }) {
     <Container>
       <MaterialIcons
         onPress={() => navigation.navigate('Product')}
-        size={28}
+        size={35}
         color={'white'}
         name={'add-circle-outline'}
       />
       <FontAwesome
         onPress={() => navigation.navigate('Home')}
-        size={28}
+        size={35}
         color={'white'}
         name={'home'}
       />
       <MaterialIcons
         onPress={() => navigation.navigate('History')}
-        size={28}
+        size={35}
         color={'white'}
         name={'format-list-bulleted'}
       />

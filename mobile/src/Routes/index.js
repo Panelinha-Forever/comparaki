@@ -1,15 +1,22 @@
-import React from 'react';
-
 import 'react-native-gesture-handler';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import React from 'react';
 
-import Home from '../pages/Home/';
-import Product from '../pages/Product';
-import History from '../pages/History';
+import { Ionicons } from '@expo/vector-icons';
+
+import { NavigationContainer } from '@react-navigation/native';
+
+import {
+  createStackNavigator,
+  TransitionPresets
+} from '@react-navigation/stack';
+
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+import { HomeTabNavigator } from './tabNavigation';
 
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
@@ -23,25 +30,11 @@ export default function App() {
             backgroundColor: '#2E5E96'
           },
           headerTintColor: '#ffffff',
-          headerBackTitleVisible: false
+          headerBackTitleVisible: false,
+          ...TransitionPresets.ModalPresentationIOS
         }}
-        headerMode='float'
       >
-        <Stack.Screen
-          name='Home'
-          options={{ title: 'COMPARAKI' }}
-          component={Home}
-        />
-        <Stack.Screen
-          name='Product'
-          options={{ title: 'PRODUTO' }}
-          component={Product}
-        />
-        <Stack.Screen
-          name='History'
-          options={{ title: 'HISTÓRICO' }}
-          component={History}
-        />
+        <Stack.Screen name='Home' component={HomeTabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );

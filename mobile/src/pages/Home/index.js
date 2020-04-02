@@ -12,9 +12,9 @@ import { Content, Container, Navbar } from '../../styles/global';
 export default function Home({ navigation }) {
   return (
     <Container>
-      <Navbar>
+      {/* <Navbar>
         <MaterialIcons size={28} color={'#191FB4'} name={'translate'} />
-      </Navbar>
+      </Navbar> */}
       <Content>
         <ScrollView showsVerticalScrollIndicator={false}>
           <Card />
@@ -26,7 +26,6 @@ export default function Home({ navigation }) {
           <Card />
         </ScrollView>
       </Content>
-      <Footer navigation={navigation} />
     </Container>
   );
 }
