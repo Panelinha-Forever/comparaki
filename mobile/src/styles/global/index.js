@@ -8,14 +8,15 @@ export const Header = styled.View`
 `;
 
 export const Typography = styled.Text`
-  font-size: ${props => props.fontSize};
-  color: ${props => props.color || '#000'};
-  font-weight: ${props => props.fontWeight || 'normal'};
-  text-transform: ${props => (props.uppercase && 'uppercase') || 'none'};
-  text-align: ${props => props.align};
-  margin-bottom: ${props => props.mb || 0};
-  margin-right: ${props => props.mr || 0};
-  margin-top: ${props => props.mt || 0};
+  font-size: ${(props) => props.fontSize};
+  color: ${(props) => props.color || '#000'};
+  font-weight: ${(props) => props.fontWeight || 'normal'};
+  text-transform: ${(props) => (props.uppercase && 'uppercase') || 'none'};
+  text-align: ${(props) => props.align};
+  margin-bottom: ${(props) => props.mb || 0};
+  margin-right: ${(props) => props.mr || 0};
+  margin-left: ${(props) => props.ml || 0};
+  margin-top: ${(props) => props.mt || 0};
 `;
 
 export const Content = styled.View`

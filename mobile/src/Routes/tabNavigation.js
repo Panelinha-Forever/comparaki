@@ -32,6 +32,7 @@ export const HomeTabNavigator = ({ navigation, route }) => {
 
   return (
     <Tab.Navigator
+      initialRouteName={'Home'}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           let iconName;
@@ -44,7 +45,7 @@ export const HomeTabNavigator = ({ navigation, route }) => {
           }
 
           return <Ionicons size={size} color={color} name={iconName} />;
-        }
+        },
       })}
     >
       <Tab.Screen

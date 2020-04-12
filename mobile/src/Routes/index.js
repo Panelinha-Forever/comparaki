@@ -2,21 +2,16 @@ import 'react-native-gesture-handler';
 
 import React from 'react';
 
-import { Ionicons } from '@expo/vector-icons';
-
 import { NavigationContainer } from '@react-navigation/native';
 
 import {
   createStackNavigator,
-  TransitionPresets
+  TransitionPresets,
 } from '@react-navigation/stack';
-
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { HomeTabNavigator } from './tabNavigation';
 
 const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
@@ -27,11 +22,11 @@ export default function App() {
           headerTitleAlign: 'center',
           gestureEnabled: true,
           headerStyle: {
-            backgroundColor: '#2E5E96'
+            backgroundColor: '#2E5E96',
           },
           headerTintColor: '#ffffff',
           headerBackTitleVisible: false,
-          ...TransitionPresets.ModalPresentationIOS
+          ...TransitionPresets.ModalPresentationIOS,
         }}
       >
         <Stack.Screen name='Home' component={HomeTabNavigator} />

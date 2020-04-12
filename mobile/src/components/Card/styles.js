@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   width: 100%;
-  height: 300px;
+  height: 350px;
   border: 0.5px solid #c4c4c4;
   display: flex;
   flex-direction: row;
@@ -12,7 +12,7 @@ export const Container = styled.View`
 
 export const Image = styled.Image`
   width: 100%;
-  height: 40%;
+  height: 50%;
   margin: 5px;
 `;
 

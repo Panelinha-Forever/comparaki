@@ -1,29 +1,36 @@
-import React from 'react';
-import { ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, Button } from 'react-native';
 
-import { MaterialIcons } from '@expo/vector-icons';
+import { getProducts, clearProducts } from '../../services/storage';
 
 import Card from '../../components/Card';
-import Footer from '../../components/Footer';
 
-import { Content, Container, Navbar } from '../../styles/global';
-// import { Container } from './styles';
+import { Content, Container } from '../../styles/global';
 
 export default function Home({ navigation }) {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    async function getProds(params) {
+      const prodList = await getProducts();
+
+      setProducts(prodList);
+    }
+
+    getProds();
+  }, [products]);
+
   return (
     <Container>
       {/* <Navbar>
         <MaterialIcons size={28} color={'#191FB4'} name={'translate'} />
       </Navbar> */}
       <Content>
+        <Button title={'Reset'} onPress={clearProducts}></Button>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          {products.map((p) => (
+            <Card navigation={navigation} key={p.id} product={p} />
+          ))}
         </ScrollView>
       </Content>
     </Container>

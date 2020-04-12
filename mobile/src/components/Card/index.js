@@ -1,15 +1,42 @@
 import React from 'react';
 
-const ProductImage = require('../../../assets/t-home.png');
 import { FontAwesome } from '@expo/vector-icons';
 
 import { Typography } from '../../styles/global';
 
 import { Container, Image, Info, Toolbar, Wrap, CompButton } from './styles';
 
-import { Button, Text } from 'react-native';
+import { Button, Linking, Share } from 'react-native';
 
-export default function Card() {
+export default function Card({ navigation, product }) {
+  async function handleShare() {
+    try {
+      const result = await Share.share({
+        message: `COMPARANDOAKI encontrei o melhor preço para ${product.name} com o valor R$${product.desiredPrice} em www.kabum.com`,
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+  function handleEdit() {
+    navigation.navigate('Product', product);
+  }
+
+  function handleBrowser() {
+    Linking.openURL(
+      'https://www.kabum.com.br/produto/101268/placa-de-video-galax-nvidia-geforce-gtx-1660-1-click-oc-6gb-gddr5-60srh7dsy91c'
+    );
+  }
   return (
     <Container>
       <Wrap>
@@ -20,10 +47,10 @@ export default function Card() {
           align={'center'}
           fontWeight={'bold'}
         >
-          Notebook
+          {product.name}
         </Typography>
 
-        <Image resizeMode={'contain'} source={ProductImage}></Image>
+        <Image resizeMode={'cover'} source={{ uri: product.imagePath }} />
         <Info>
           <Typography
             uppercase
@@ -106,7 +133,7 @@ export default function Card() {
               align={'left'}
               fontWeight={'bold'}
             >
-              R$4000{' '}
+              R${product.desiredPrice}{' '}
               <Typography
                 fontSize={'12px'}
                 color={'#505050'}
@@ -123,7 +150,7 @@ export default function Card() {
                 fontWeight={'bold'}
               >
                 {' '}
-                25/03/20
+                {product.formattedDesireDate}
               </Typography>
             </Typography>
           </Typography>
@@ -131,10 +158,25 @@ export default function Card() {
         <CompButton color={'#191FB4'} title='finalizar' />
       </Wrap>
       <Toolbar>
-        <FontAwesome size={28} color={'white'} name={'edit'} />
-        <FontAwesome size={28} color={'white'} name={'internet-explorer'} />
+        <FontAwesome
+          size={28}
+          onPress={handleEdit}
+          color={'white'}
+          name={'edit'}
+        />
+        <FontAwesome
+          onPress={handleBrowser}
+          size={28}
+          color={'white'}
+          name={'internet-explorer'}
+        />
         <FontAwesome size={28} color={'white'} name={'dollar'} />
-        <FontAwesome size={28} color={'white'} name={'share-alt-square'} />
+        <FontAwesome
+          onPress={handleShare}
+          size={28}
+          color={'white'}
+          name={'share-alt-square'}
+        />
       </Toolbar>
     </Container>
   );
