@@ -1,64 +1,60 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-import { CalendarList } from 'react-native-calendars';
-import { LocaleConfig } from 'react-native-calendars';
+import { Theme } from '../../styles/theme';
 
-LocaleConfig.locales['pt'] = {
-  monthNames: [
-    'Janeiro',
-    'Fevereiro',
-    'Março',
-    'Abril',
-    'Maio',
-    'Junho',
-    'Julho',
-    'Agosto',
-    'Setembro',
-    'Outubro',
-    'Novembro',
-    'Dezembro'
-  ],
-  monthNamesShort: [
-    'Jan',
-    'Fev',
-    'Mar',
-    'Abr',
-    'Mai',
-    'Jun',
-    'Jul',
-    'Ago',
-    'Set',
-    'Out',
-    'Nov',
-    'Dez'
-  ],
-  dayNames: [
-    'Domingo',
-    'Segunda',
-    'Terça',
-    'Quarta',
-    'Quinta',
-    'Sexta',
-    'Sábado'
-  ],
-  dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
-  today: 'Hoje'
-};
-LocaleConfig.defaultLocale = 'pt';
+import { Container } from './styles';
 
-export default function Calendar({ date, setDate }) {
+import { Row } from '../../styles/global';
+
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+import CalendarPicker from 'react-native-calendar-picker';
+
+export default function Calendar({ setModalVisibility, setDate, date }) {
   return (
-    <CalendarList
-      horizontal={true}
-      pagingEnabled={true}
-      minDate={new Date()}
-      onDayPress={day => {
-        setDate(day.dateString);
-      }}
-      firstDay={1}
-      showWeekNumbers={true}
-      onPressArrowLeft={substractMonth => substractMonth()}
-      onPressArrowRight={addMonth => addMonth()}
-    />
+    <Container>
+      <Row justify='flex-end' padding={4}>
+        <MaterialCommunityIcons
+          size={30}
+          color={Theme.colors.error}
+          name={'close-circle'}
+          onPress={() => setModalVisibility(false)}
+        />
+      </Row>
+
+      <CalendarPicker
+        width={350}
+        startFromMonday={true}
+        weekdays={['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom']}
+        months={[
+          'Janeiro',
+          'Fevereiro',
+          'Março',
+          'Abril',
+          'Maio',
+          'Junho',
+          'Julho',
+          'Agosto',
+          'Setembro',
+          'Outubro',
+          'Novembro',
+          'Dezembro',
+        ]}
+        previousTitle='Anterior'
+        nextTitle='Próximo'
+        selectedStartDate={date}
+        onDateChange={(day) => {
+          setDate(day);
+        }}
+        minDate={new Date()}
+        todayBackgroundColor={'transparent'}
+        selectedDayColor={Theme.colors.primary}
+        todayBackgroundColor={'#c5c5c5'}
+        todayTextStyle={'black'}
+        selectedDayTextColor={'white'}
+        previousTitleStyle={{ color: Theme.colors.primary }}
+        nextTitleStyle={{ color: Theme.colors.primary }}
+      />
+    </Container>
   );
 }

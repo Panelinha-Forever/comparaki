@@ -1,30 +1,21 @@
 import styled from 'styled-components/native';
 
-export const Header = styled.View`
-  width: 100%;
-  height: 100px;
-  background: #2e5e96;
-  justify-content: center;
-`;
-
 export const Typography = styled.Text`
-  font-size: ${(props) => props.fontSize};
+  font-size: ${({ fontSize }) => `${fontSize || 20}px`};
   color: ${(props) => props.color || '#000'};
   font-weight: ${(props) => props.fontWeight || 'normal'};
   text-transform: ${(props) => (props.uppercase && 'uppercase') || 'none'};
-  text-align: ${(props) => props.align};
-  margin-bottom: ${(props) => props.mb || 0};
-  margin-right: ${(props) => props.mr || 0};
-  margin-left: ${(props) => props.ml || 0};
-  margin-top: ${(props) => props.mt || 0};
+  text-align: ${({ align }) => `${align || 'left'}`};
+  margin-bottom: ${({ mb }) => `${mb || 0}px`};
+  margin-right: ${({ mr }) => `${mr || 0}px`};
+  margin-left: ${({ ml }) => `${ml || 0}px`};
+  margin-top: ${({ mt }) => `${mt || 0}px`};
 `;
 
 export const Content = styled.View`
   flex: 1;
   height: 100%;
   padding: 20px 20px 0 20px;
-  align-content: center;
-  align-items: center;
 `;
 
 export const Container = styled.View`
@@ -41,4 +32,12 @@ export const Navbar = styled.View`
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
+`;
+
+export const Row = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: ${({ justify }) => `${justify || 'flex-start'}`};
+  align-items: ${({ align }) => `${align || 'flex-start'}`};
+  padding: ${({ padding }) => `${padding || 0}px`};
 `;

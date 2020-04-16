@@ -2,32 +2,27 @@ import React, { useState, useEffect } from 'react';
 
 import { ScrollView, Alert, View, Text } from 'react-native';
 
-import { withTheme, Button, Modal } from 'react-native-paper';
+import { withTheme, Button, Modal, IconButton } from 'react-native-paper';
 
 import { AntDesign } from '@expo/vector-icons';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import { Content, Container, Navbar, Typography } from '../../styles/global';
+import {
+  Content,
+  Container,
+  Navbar,
+  Typography,
+  Row,
+} from '../../styles/global';
 
 import Calendar from '../../components/Calendar';
 
-import {
-  Input,
-  Image,
-  ImageContainer,
-  Row,
-  ImageActions,
-  ImageActions2,
-} from './styles';
+import { Input, Image, ImageContainer, ImageActions } from './styles';
 
 import * as ImagePicker from 'expo-image-picker';
 
-import {
-  storeProduct,
-  putProduct,
-  clearProducts,
-} from '../../services/storage';
+import { storeProduct } from '../../services/storage';
 
 const moment = require('moment');
 
@@ -156,7 +151,7 @@ function Product({ route, navigation, theme }) {
               <MaterialCommunityIcons
                 size={55}
                 color={theme.colors.secondary}
-                name={'plus-box'}
+                name={`${imagePath ? 'circle-edit-outline' : 'plus-box'}`}
                 onPress={selectImagePicker}
               />
             </ImageActions>
@@ -177,19 +172,20 @@ function Product({ route, navigation, theme }) {
           />
 
           <Row>
-            <MaterialCommunityIcons
-              size={28}
-              color={theme.colors.secondary}
-              name={'calendar'}
-              onPress={() => setVisible(true)}
-            />
-
             <Input
-              style={{ marginLeft: 10, maxWidth: '85%' }}
+              minWidth={'100%'}
               mode='outlined'
               disabled
               value={formattedDesireDate}
               label='Data máxima para compra'
+            />
+
+            <IconButton
+              style={{ position: 'absolute', right: 0, height: '100%' }}
+              color={theme.colors.secondary}
+              icon='calendar'
+              size={30}
+              onPress={() => setVisible(true)}
             />
           </Row>
 
@@ -204,7 +200,11 @@ function Product({ route, navigation, theme }) {
         </ScrollView>
 
         <Modal onDismiss={() => setVisible(false)} visible={visible}>
-          <Calendar setDate={setDesiredDate} />
+          <Calendar
+            date={desiredDate}
+            setModalVisibility={setVisible}
+            setDate={setDesiredDate}
+          />
         </Modal>
 
         <Modal
@@ -227,7 +227,7 @@ function Product({ route, navigation, theme }) {
                 fontSize={15}
                 color={theme.colors.primary}
                 align={'center'}
-                mb={20}
+                mb={50}
                 mt={10}
               >
                 Escolha uma das fontes

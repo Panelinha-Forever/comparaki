@@ -42,7 +42,7 @@ export default function Card({ navigation, product }) {
       <Wrap>
         <Typography
           uppercase
-          fontSize={'22px'}
+          fontSize={22}
           color={'#2f2cb9'}
           align={'center'}
           fontWeight={'bold'}
@@ -54,18 +54,18 @@ export default function Card({ navigation, product }) {
         <Info>
           <Typography
             uppercase
-            fontSize={'13px'}
+            fontSize={13}
             color={'#6F9441'}
             align={'center'}
             fontWeight={'bold'}
-            mb={'13px'}
-            mt={'13px'}
+            mb={13}
+            mt={13}
           >
             Melhor oferta
           </Typography>
           <Typography
             uppercase
-            fontSize={'12px'}
+            fontSize={12}
             color={'#505050'}
             align={'left'}
             fontWeight={'bold'}
@@ -73,7 +73,7 @@ export default function Card({ navigation, product }) {
             NO SITE{' '}
             <Typography
               uppercase
-              fontSize={'12px'}
+              fontSize={12}
               color={'#4200FF'}
               align={'left'}
               fontWeight={'bold'}
@@ -81,7 +81,7 @@ export default function Card({ navigation, product }) {
               KABUM{' '}
               <Typography
                 uppercase
-                fontSize={'12px'}
+                fontSize={12}
                 color={'#505050'}
                 align={'left'}
                 fontWeight={'bold'}
@@ -89,7 +89,7 @@ export default function Card({ navigation, product }) {
                 POR{' '}
                 <Typography
                   uppercase
-                  fontSize={'12px'}
+                  fontSize={12}
                   color={'#2F5CCE'}
                   align={'left'}
                   fontWeight={'bold'}
@@ -98,7 +98,7 @@ export default function Card({ navigation, product }) {
                   <Typography
                     uppercase
                     color={'#505050'}
-                    fontSize={'12px'}
+                    fontSize={12}
                     align={'left'}
                     fontWeight={'bold'}
                   >
@@ -106,7 +106,7 @@ export default function Card({ navigation, product }) {
                   </Typography>
                   <Typography
                     uppercase
-                    fontSize={'12px'}
+                    fontSize={12}
                     color={'#D9B600'}
                     align={'left'}
                     fontWeight={'bold'}
@@ -120,7 +120,7 @@ export default function Card({ navigation, product }) {
 
           <Typography
             uppercase
-            fontSize={'12px'}
+            fontSize={12}
             color={'#505050'}
             align={'left'}
             fontWeight={'bold'}
@@ -128,14 +128,14 @@ export default function Card({ navigation, product }) {
             VALOR DESEJADO{' '}
             <Typography
               uppercase
-              fontSize={'12px'}
+              fontSize={12}
               color={'#2F5CCE'}
               align={'left'}
               fontWeight={'bold'}
             >
               R${product.desiredPrice}{' '}
               <Typography
-                fontSize={'12px'}
+                fontSize={12}
                 color={'#505050'}
                 align={'left'}
                 fontWeight={'bold'}
@@ -144,7 +144,7 @@ export default function Card({ navigation, product }) {
               </Typography>
               <Typography
                 uppercase
-                fontSize={'12px'}
+                fontSize={12}
                 color={'#FF9900'}
                 align={'left'}
                 fontWeight={'bold'}
