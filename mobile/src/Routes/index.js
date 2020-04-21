@@ -4,6 +4,8 @@ import React from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 
+import { Button } from 'react-native';
+
 import {
   createStackNavigator,
   TransitionPresets,
@@ -13,12 +15,16 @@ import { HomeTabNavigator } from './tabNavigation';
 
 const Stack = createStackNavigator();
 
+import EditProduct from '../pages/EditProduct';
+import Price from '../pages/Price';
+
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName='Home'
         screenOptions={{
+          headerLeft: null,
           headerTitleAlign: 'center',
           gestureEnabled: true,
           headerStyle: {
@@ -29,7 +35,25 @@ export default function App() {
           ...TransitionPresets.ModalPresentationIOS,
         }}
       >
-        <Stack.Screen name='Home' component={HomeTabNavigator} />
+        <Stack.Screen
+          options={{ title: 'COMPARAKI' }}
+          name='Home'
+          component={HomeTabNavigator}
+        />
+        <Stack.Screen
+          options={{
+            title: 'EDIÇÃO DE PRODUTO',
+          }}
+          name='EditProduct'
+          component={EditProduct}
+        />
+        <Stack.Screen
+          options={{
+            title: 'ATUALIZAÇÃO DE VALORES',
+          }}
+          name='Price'
+          component={Price}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

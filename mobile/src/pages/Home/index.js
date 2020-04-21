@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, Button } from 'react-native';
+import { ScrollView } from 'react-native';
 
-import { getProducts, clearProducts } from '../../services/storage';
+import { getProducts } from '../../services/storage';
 
 import Card from '../../components/Card';
 
@@ -11,14 +11,13 @@ export default function Home({ navigation }) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    async function getProds(params) {
+    const unsubscribe = navigation.addListener('focus', async () => {
       const prodList = await getProducts();
-
       setProducts(prodList);
-    }
+    });
 
-    getProds();
-  }, [products]);
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <Container>
@@ -26,7 +25,6 @@ export default function Home({ navigation }) {
         <MaterialIcons size={28} color={'#191FB4'} name={'translate'} />
       </Navbar> */}
       <Content>
-        <Button title={'Reset'} onPress={clearProducts}></Button>
         <ScrollView showsVerticalScrollIndicator={false}>
           {products.map((p) => (
             <Card navigation={navigation} key={p.id} product={p} />

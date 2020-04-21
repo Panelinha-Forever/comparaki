@@ -6,18 +6,25 @@ export const getProduct = async function (id) {
   return savedProducts.find((p) => p.id === id);
 };
 
-export const putProduct = async function (newProduct) {
+export const deleteProduct = async function (id) {
   let savedProducts = JSON.parse(await AsyncStorage.getItem('products'));
 
-  savedProducts.forEach((element) => {
-    if (element.id === newProduct.id) {
-      element.name = newProduct.name;
-      element.desiredPrice = newProduct.desiredPrice;
-      element.desiredDate = newProduct.desiredDate;
-      element.formattedDesireDate = newProduct.formattedDesireDate;
-      element.update_at = new Date();
-    }
-  });
+  const idx = savedProducts.findIndex((i) => i.id === id);
+
+  savedProducts.splice(idx, 1);
+
+  await AsyncStorage.setItem('products', JSON.stringify(savedProducts));
+};
+
+export const putProduct = async function (id, newProduct) {
+  let savedProducts = JSON.parse(await AsyncStorage.getItem('products'));
+
+  const idx = savedProducts.findIndex((i) => i.id === id);
+
+  savedProducts[idx] = {
+    ...savedProducts[idx],
+    ...newProduct,
+  };
 
   await AsyncStorage.setItem('products', JSON.stringify(savedProducts));
 };
@@ -28,7 +35,7 @@ export const getProducts = async function () {
     return [];
   }
 
-  // products.sort((a, b) => (a.id > b.id ? -1 : 1));
+  products.sort((a, b) => (a.id > b.id ? -1 : 1));
 
   return products;
 };
@@ -40,14 +47,16 @@ export const storeProduct = async function (product) {
     savedProducts = [];
   }
 
+  const id = savedProducts && savedProducts.length + 1;
+
   savedProducts.push({
     ...product,
-    id: savedProducts && savedProducts.length + 1,
+    id,
   });
 
   await AsyncStorage.setItem('products', JSON.stringify(savedProducts));
 
-  return savedProducts;
+  return { savedProducts, id };
 };
 
 export const clearProducts = async function () {

@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import Home from '../pages/Home/';
+import Home from '../pages/Home';
 import Product from '../pages/Product';
 import History from '../pages/History';
 
@@ -53,7 +53,11 @@ export const HomeTabNavigator = ({ navigation, route }) => {
         name='Product'
         component={Product}
       />
-      <Tab.Screen options={{ title: 'Home' }} name='Home' component={Home} />
+      <Tab.Screen
+        options={{ title: 'COMPARAKI' }}
+        name='Home'
+        component={Home}
+      />
       <Tab.Screen
         options={{ title: 'Histórico' }}
         name='History'

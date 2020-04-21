@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, Text } from 'react-native';
 
 import { withTheme, Button, Modal, IconButton } from 'react-native-paper';
 
@@ -9,10 +9,10 @@ import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
 import {
   Content,
   Container,
-  Navbar,
   Typography,
   Row,
   Input,
+  Navbar,
   Image,
   ImageContainer,
   ImageActions,
@@ -22,11 +22,11 @@ import Calendar from '../../components/Calendar';
 
 import * as ImagePicker from 'expo-image-picker';
 
-import { storeProduct } from '../../services/storage';
+import { putProduct, deleteProduct } from '../../services/storage';
 
 const moment = require('moment');
 
-function Product({ route, navigation, theme }) {
+function EditProduct({ route, navigation, theme }) {
   const [chooseImageModal, setChooseImageModal] = useState(false);
 
   const [name, setName] = useState('');
@@ -35,28 +35,29 @@ function Product({ route, navigation, theme }) {
   const [formattedDesireDate, setFormattedDesiredDate] = useState(null);
   const [visible, setVisible] = useState(false);
   const [desiredDate, setDesiredDate] = useState(
-    moment().add(1, 'week').format('YYYY-MM-DD')
+    // moment().add(1, 'week').format('YYYY-MM-DD')
+    null
   );
-
-  const [quotations, setQuotations] = useState([]);
-  const [site, setSite] = useState('');
-  const [value, setValue] = useState('');
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      resetFields();
+      const {
+        name: prodName,
+        imagePath: prodImagePath,
+        desiredPrice: prodDesiredPrice,
+        formattedDesireDate: prodFormattedDesireDate,
+        desiredDate: prodDesiredDate,
+      } = route.params;
+
+      setName(prodName);
+      setImagePath(prodImagePath);
+      setDesiredPrice(prodDesiredPrice);
+      setFormattedDesiredDate(prodFormattedDesireDate);
+      setDesiredDate(prodDesiredDate);
     });
 
     return unsubscribe;
   }, [navigation]);
-
-  useEffect(() => {
-    if (moment(desiredDate).isValid) {
-      setDesiredDate(desiredDate);
-      setFormattedDesiredDate(moment(desiredDate).format('DD/MM/YYYY'));
-      setVisible(false);
-    }
-  }, [desiredDate]);
 
   async function pickImageFromCamera() {
     try {
@@ -103,18 +104,20 @@ function Product({ route, navigation, theme }) {
   }
 
   async function handleSaveProduct() {
-    await storeProduct({
+    await putProduct(route.params.id, {
       name,
       desiredPrice,
       desiredDate,
       formattedDesireDate,
       imagePath,
-      quotations,
-      created_at: new Date(),
       update_at: new Date(),
     });
 
-    resetFields();
+    navigation.navigate('Home');
+  }
+
+  async function deleteProductRequest() {
+    await deleteProduct(route.params.id);
 
     navigation.navigate('Home');
   }
@@ -123,42 +126,24 @@ function Product({ route, navigation, theme }) {
     setChooseImageModal(true);
   }
 
-  function resetFields() {
-    setName('');
-    setImagePath(null);
-    setDesiredPrice('');
-    setDesiredDate(moment().add(1, 'week').format('YYYY-MM-DD'));
-    setImagePath(null);
-    setImagePath(null);
-    setQuotations([]);
-    setSite('');
-    setValue('');
-  }
-
-  function handleAddQuotation() {
-    let newQuotations = [
-      ...quotations,
-      { site, value, created_at: new Date(), update_at: new Date() },
-    ];
-    setQuotations(newQuotations);
-    setSite('');
-    setValue('');
-  }
-
-  function removeFromQuotions(idx) {
-    setQuotations(quotations.filter((item, i) => i !== idx));
-  }
   return (
     <Container>
       <Navbar>
         <AntDesign
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => navigation.pop(1)}
           size={28}
           color={theme.colors.primary}
           name={'arrowleft'}
         />
+        <AntDesign
+          onPress={deleteProductRequest}
+          size={28}
+          color={theme.colors.error}
+          name={'delete'}
+        />
         <AntDesign size={28} color={theme.colors.primary} name={'question'} />
       </Navbar>
+
       <Content>
         <ScrollView showsVerticalScrollIndicator={false}>
           <ImageContainer>
@@ -206,102 +191,6 @@ function Product({ route, navigation, theme }) {
               onPress={() => setVisible(true)}
             />
           </Row>
-
-          <Row borderTop align='center' justify='space-evenly' padding={15}>
-            <Typography
-              fontSize={22}
-              color={theme.colors.primary}
-              fontWeight='bold'
-              uppercase
-            >
-              Cotação de valores
-            </Typography>
-
-            <AntDesign
-              size={30}
-              color={theme.colors.primary}
-              name={'questioncircle'}
-            />
-          </Row>
-
-          {quotations.length > 0 &&
-            quotations.map((q, idx) => (
-              <Container mt={10} mb={10} padding={15} key={idx}>
-                <Row justify='space-between'>
-                  <Typography
-                    color={theme.colors.secondary}
-                    fontWeight='bold'
-                    uppercase
-                    fontSize={25}
-                  >
-                    {idx + 1}
-                  </Typography>
-
-                  <AntDesign
-                    size={30}
-                    onPress={() => {
-                      removeFromQuotions(idx);
-                    }}
-                    color={theme.colors.error}
-                    name={'delete'}
-                  />
-                </Row>
-                <Input
-                  dense
-                  mb={10}
-                  mt={10}
-                  mode='outlined'
-                  value={q.site}
-                  onChange={(e) => {
-                    quotations[idx].site = e.nativeEvent.text;
-                    setQuotations([...quotations]);
-                  }}
-                  label='Site'
-                />
-                <Input
-                  dense
-                  minWidth={'100%'}
-                  mode='outlined'
-                  value={q.value}
-                  onChange={(e) => {
-                    quotations[idx].value = e.nativeEvent.text;
-                    setQuotations([...quotations]);
-                  }}
-                  keyboardType={'number-pad'}
-                  label='Valor'
-                />
-              </Container>
-            ))}
-
-          <Container backColor='#e4e4e4' padding={10}>
-            <Input
-              mb={10}
-              mode='flat'
-              value={site}
-              label='Site'
-              style={{ backgroundColor: '#fff' }}
-              onChange={(e) => setSite(e.nativeEvent.text)}
-            />
-            <Input
-              minWidth={'100%'}
-              mode='flat'
-              style={{ backgroundColor: '#fff' }}
-              value={value}
-              keyboardType={'number-pad'}
-              label='Valor'
-              onChange={(e) => setValue(e.nativeEvent.text)}
-            />
-            <Row justify='flex-end'>
-              <Button
-                style={{ marginTop: 10 }}
-                color={theme.colors.primary}
-                mode='contained'
-                onPress={() => handleAddQuotation()}
-              >
-                Adicionar
-              </Button>
-            </Row>
-          </Container>
 
           <Button
             style={{ marginTop: 30 }}
@@ -368,4 +257,4 @@ function Product({ route, navigation, theme }) {
   );
 }
 
-export default withTheme(Product);
+export default withTheme(EditProduct);

@@ -1,37 +1,49 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
-import { Typography } from '../../styles/global';
+import { Typography, Button, Image } from '../../styles/global';
 
-import { Container, Image, Info, Toolbar, Wrap, CompButton } from './styles';
+import { Container, Toolbar, Content } from './styles';
 
-import { Button, Linking, Share } from 'react-native';
+import { Linking, Share } from 'react-native';
 
-export default function Card({ navigation, product }) {
+const moment = require('moment');
+
+export default function ProdCard({ navigation, product }) {
+  const [bestOffer, setBestOffer] = useState({});
+
+  useEffect(() => {
+    if (product.quotations.length > 0) {
+      let tempBestOffer = product.quotations[0];
+
+      for (const quotation of product.quotations) {
+        if (quotation.value < tempBestOffer.value) {
+          tempBestOffer = quotation;
+        }
+      }
+
+      setBestOffer(tempBestOffer);
+    }
+  }, [product]);
+
   async function handleShare() {
     try {
-      const result = await Share.share({
+      await Share.share({
         message: `COMPARANDOAKI encontrei o melhor preço para ${product.name} com o valor R$${product.desiredPrice} em www.kabum.com`,
       });
-
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
     } catch (error) {
       alert(error.message);
     }
   }
   function handleEdit() {
-    navigation.navigate('Product', product);
+    navigation.navigate('EditProduct', product);
+  }
+  function handlePrice() {
+    navigation.navigate('Price', product);
   }
 
+  /** COLOCAR O SITE DO PREÇO */
   function handleBrowser() {
     Linking.openURL(
       'https://www.kabum.com.br/produto/101268/placa-de-video-galax-nvidia-geforce-gtx-1660-1-click-oc-6gb-gddr5-60srh7dsy91c'
@@ -39,124 +51,147 @@ export default function Card({ navigation, product }) {
   }
   return (
     <Container>
-      <Wrap>
+      <Content>
         <Typography
           uppercase
-          fontSize={22}
-          color={'#2f2cb9'}
+          fontSize={18}
+          color={'#4200FF'}
           align={'center'}
           fontWeight={'bold'}
         >
-          {product.name}
+          {product.name.length > 42
+            ? product.name.substring(0, 42 - 3) + '...'
+            : product.name}
         </Typography>
+        <Typography
+          uppercase
+          fontSize={14}
+          color={'#C4C4C4'}
+          align={'center'}
+          fontWeight={'bold'}
+        >
+          {moment(product.desiredDate).diff(new Date(), 'days')} dias para
+          acabar
+        </Typography>
+        <Image
+          mt={10}
+          height={'100px'}
+          resizeMode={'cover'}
+          source={{ uri: product.imagePath }}
+        />
 
-        <Image resizeMode={'cover'} source={{ uri: product.imagePath }} />
-        <Info>
-          <Typography
-            uppercase
-            fontSize={13}
-            color={'#6F9441'}
-            align={'center'}
-            fontWeight={'bold'}
-            mb={13}
-            mt={13}
-          >
-            Melhor oferta
-          </Typography>
+        <Typography
+          uppercase
+          fontSize={17}
+          color={'#6F9441'}
+          align={'center'}
+          fontWeight={'bold'}
+          mb={10}
+          mt={10}
+        >
+          Melhor oferta
+        </Typography>
+        <Typography
+          uppercase
+          fontSize={12}
+          color={'#505050'}
+          align={'left'}
+          fontWeight={'bold'}
+        >
+          {`NO SITE `}
           <Typography
             uppercase
             fontSize={12}
-            color={'#505050'}
-            align={'left'}
             fontWeight={'bold'}
+            color={'#4200FF'}
           >
-            NO SITE{' '}
+            {`${bestOffer.site} `}
             <Typography
               uppercase
               fontSize={12}
-              color={'#4200FF'}
+              color={'#505050'}
               align={'left'}
               fontWeight={'bold'}
             >
-              KABUM{' '}
+              {`POR `}
               <Typography
                 uppercase
                 fontSize={12}
-                color={'#505050'}
+                color={'#2F5CCE'}
                 align={'left'}
                 fontWeight={'bold'}
               >
-                POR{' '}
+                {`R$${bestOffer.value} `}
                 <Typography
                   uppercase
+                  color={'#505050'}
                   fontSize={12}
-                  color={'#2F5CCE'}
                   align={'left'}
                   fontWeight={'bold'}
                 >
-                  R$4000{' '}
-                  <Typography
-                    uppercase
-                    color={'#505050'}
-                    fontSize={12}
-                    align={'left'}
-                    fontWeight={'bold'}
-                  >
-                    EM{' '}
-                  </Typography>
-                  <Typography
-                    uppercase
-                    fontSize={12}
-                    color={'#D9B600'}
-                    align={'left'}
-                    fontWeight={'bold'}
-                  >
-                    25/03/20{' '}
-                  </Typography>
+                  {`ATUALIZADO EM `}
+                </Typography>
+                <Typography
+                  uppercase
+                  fontSize={12}
+                  color={'#D9B600'}
+                  align={'left'}
+                  fontWeight={'bold'}
+                >
+                  {`${moment(bestOffer.created_at).format('DD/MM/YYYY')} `}
                 </Typography>
               </Typography>
             </Typography>
           </Typography>
+        </Typography>
 
+        <Typography
+          uppercase
+          fontSize={12}
+          mt={5}
+          color={'#505050'}
+          align={'left'}
+          fontWeight={'bold'}
+        >
+          {`VALOR DE COMPRA DESEJADO `}
           <Typography
             uppercase
             fontSize={12}
-            color={'#505050'}
+            color={'#2F5CCE'}
             align={'left'}
             fontWeight={'bold'}
           >
-            VALOR DESEJADO{' '}
+            {`R$${product.desiredPrice} `}
+
             <Typography
-              uppercase
               fontSize={12}
-              color={'#2F5CCE'}
+              color={'#505050'}
               align={'left'}
               fontWeight={'bold'}
             >
-              R${product.desiredPrice}{' '}
-              <Typography
-                fontSize={12}
-                color={'#505050'}
-                align={'left'}
-                fontWeight={'bold'}
-              >
-                ATÉ{' '}
-              </Typography>
-              <Typography
-                uppercase
-                fontSize={12}
-                color={'#FF9900'}
-                align={'left'}
-                fontWeight={'bold'}
-              >
-                {' '}
-                {product.formattedDesireDate}
-              </Typography>
+              {`ATÉ `}
+            </Typography>
+            <Typography
+              uppercase
+              fontSize={12}
+              color={'#FF9900'}
+              align={'left'}
+              fontWeight={'bold'}
+            >
+              {`${product.formattedDesireDate}`}
             </Typography>
           </Typography>
-        </Info>
-        <CompButton color={'#191FB4'} title='finalizar' />
-      </Wrap>
+        </Typography>
+
+        <Button
+          dark
+          mt={10}
+          contentStyle={{ backgroundColor: '#191FB4' }}
+          color={'white'}
+        >
+          Finalizar
+        </Button>
+      </Content>
       <Toolbar>
         <FontAwesome
           size={28}
@@ -164,13 +199,18 @@ export default function Card({ navigation, product }) {
           color={'white'}
           name={'edit'}
         />
-        <FontAwesome
+        <MaterialCommunityIcons
           onPress={handleBrowser}
           size={28}
           color={'white'}
-          name={'internet-explorer'}
+          name={'earth'}
         />
-        <FontAwesome size={28} color={'white'} name={'dollar'} />
+        <FontAwesome
+          onPress={handlePrice}
+          size={28}
+          color={'white'}
+          name={'dollar'}
+        />
         <FontAwesome
           onPress={handleShare}
           size={28}
