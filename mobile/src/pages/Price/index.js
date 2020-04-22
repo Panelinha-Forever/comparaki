@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-import { ScrollView, View, Text } from 'react-native';
+import { ScrollView } from 'react-native';
 
-import { withTheme, Modal, IconButton } from 'react-native-paper';
+import { withTheme } from 'react-native-paper';
 
-import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 import {
   Content,
@@ -12,14 +12,9 @@ import {
   Typography,
   Row,
   Input,
-  Image,
   Button,
   Navbar,
-  ImageContainer,
-  ImageActions,
 } from '../../styles/global';
-
-import Calendar from '../../components/Calendar';
 
 import { putProduct } from '../../services/storage';
 

@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
-import { Typography, Button, Image } from '../../styles/global';
+import { Typography, Button } from '../../styles/global';
 
 import { Container, Toolbar, Content } from './styles';
 
-import { Linking, Share } from 'react-native';
+import { Linking, Share, TouchableOpacity } from 'react-native';
 
 const moment = require('moment');
 
-export default function ProdCard({ navigation, product }) {
+export default function ProdCard({ navigation, product, showFinishOptions }) {
   const [bestOffer, setBestOffer] = useState({});
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function ProdCard({ navigation, product }) {
   async function handleShare() {
     try {
       await Share.share({
-        message: `COMPARANDOAKI encontrei o melhor preço para ${product.name} com o valor R$${product.desiredPrice} em www.kabum.com`,
+        message: `COMPARANDOAKI encontrei o melhor preço para ${product.name} com o valor R$${product.desiredPrice} em ${product.site}`,
       });
     } catch (error) {
       alert(error.message);
@@ -43,11 +43,8 @@ export default function ProdCard({ navigation, product }) {
     navigation.navigate('Price', product);
   }
 
-  /** COLOCAR O SITE DO PREÇO */
   function handleBrowser() {
-    Linking.openURL(
-      'https://www.kabum.com.br/produto/101268/placa-de-video-galax-nvidia-geforce-gtx-1660-1-click-oc-6gb-gddr5-60srh7dsy91c'
-    );
+    Linking.openURL(product.site);
   }
   return (
     <Container>
@@ -73,12 +70,6 @@ export default function ProdCard({ navigation, product }) {
           {moment(product.desiredDate).diff(new Date(), 'days')} dias para
           acabar
         </Typography>
-        <Image
-          mt={10}
-          height={'100px'}
-          resizeMode={'cover'}
-          source={{ uri: product.imagePath }}
-        />
 
         <Typography
           uppercase
@@ -105,7 +96,7 @@ export default function ProdCard({ navigation, product }) {
             fontWeight={'bold'}
             color={'#4200FF'}
           >
-            {`${bestOffer.site} `}
+            {`${bestOffer.siteName} `}
             <Typography
               uppercase
               fontSize={12}
@@ -188,35 +179,24 @@ export default function ProdCard({ navigation, product }) {
           mt={10}
           contentStyle={{ backgroundColor: '#191FB4' }}
           color={'white'}
+          onPress={() => showFinishOptions(product.id)}
         >
           Finalizar
         </Button>
       </Content>
       <Toolbar>
-        <FontAwesome
-          size={28}
-          onPress={handleEdit}
-          color={'white'}
-          name={'edit'}
-        />
-        <MaterialCommunityIcons
-          onPress={handleBrowser}
-          size={28}
-          color={'white'}
-          name={'earth'}
-        />
-        <FontAwesome
-          onPress={handlePrice}
-          size={28}
-          color={'white'}
-          name={'dollar'}
-        />
-        <FontAwesome
-          onPress={handleShare}
-          size={28}
-          color={'white'}
-          name={'share-alt-square'}
-        />
+        <TouchableOpacity onPress={handleEdit}>
+          <FontAwesome size={28} color={'white'} name={'edit'} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleBrowser}>
+          <MaterialCommunityIcons size={28} color={'white'} name={'earth'} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handlePrice}>
+          <FontAwesome size={28} color={'white'} name={'dollar'} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleShare}>
+          <FontAwesome size={28} color={'white'} name={'share-alt-square'} />
+        </TouchableOpacity>
       </Toolbar>
     </Container>
   );

@@ -45,6 +45,7 @@ export default function Calendar({ setModalVisibility, setDate, date }) {
         selectedStartDate={date}
         onDateChange={(day) => {
           setDate(day);
+          setModalVisibility(false);
         }}
         minDate={new Date()}
         todayBackgroundColor={'transparent'}

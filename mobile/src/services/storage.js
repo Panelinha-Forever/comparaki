@@ -35,9 +35,28 @@ export const getProducts = async function () {
     return [];
   }
 
-  products.sort((a, b) => (a.id > b.id ? -1 : 1));
+  let filteredProducts = products.filter((p) => {
+    return !p.status;
+  });
 
-  return products;
+  filteredProducts.sort((a, b) => (a.id > b.id ? -1 : 1));
+
+  return filteredProducts;
+};
+
+export const getHistoricProducts = async function () {
+  let products = JSON.parse(await AsyncStorage.getItem('products'));
+  if (!products) {
+    return [];
+  }
+
+  let filteredProducts = products.filter((p) => {
+    return p.status;
+  });
+
+  filteredProducts.sort((a, b) => (a.id > b.id ? -1 : 1));
+
+  return filteredProducts;
 };
 
 export const storeProduct = async function (product) {
