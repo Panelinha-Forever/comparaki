@@ -10,6 +10,8 @@ import Home from '../pages/Home';
 import Product from '../pages/Product';
 import History from '../pages/History';
 
+import { Theme } from '../styles/theme';
+
 const Tab = createBottomTabNavigator();
 
 function getHeaderTitle(route) {
@@ -33,6 +35,13 @@ export const HomeTabNavigator = ({ navigation, route }) => {
   return (
     <Tab.Navigator
       initialRouteName={'Home'}
+      tabBarOptions={{
+        keyboardHidesTabBar: true,
+        activeTintColor: Theme.colors.active,
+        inactiveTintColor: Theme.colors.inactive,
+        activeBackgroundColor: Theme.colors.primary,
+        inactiveBackgroundColor: Theme.colors.primary,
+      }}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           let iconName;
@@ -53,11 +62,7 @@ export const HomeTabNavigator = ({ navigation, route }) => {
         name='Product'
         component={Product}
       />
-      <Tab.Screen
-        options={{ title: 'COMPARAKI' }}
-        name='Home'
-        component={Home}
-      />
+      <Tab.Screen options={{ title: 'Home' }} name='Home' component={Home} />
       <Tab.Screen
         options={{ title: 'Histórico' }}
         name='History'

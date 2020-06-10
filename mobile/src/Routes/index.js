@@ -4,8 +4,6 @@ import React from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 
-import { Button } from 'react-native';
-
 import {
   createStackNavigator,
   TransitionPresets,
@@ -28,7 +26,7 @@ export default function App() {
           headerTitleAlign: 'center',
           gestureEnabled: true,
           headerStyle: {
-            backgroundColor: '#2E5E96',
+            backgroundColor: '#332B68',
           },
           headerTintColor: '#ffffff',
           headerBackTitleVisible: false,

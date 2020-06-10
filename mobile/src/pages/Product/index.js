@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 
 import { ScrollView, TouchableOpacity } from 'react-native';
 
-import { withTheme, Modal, Divider, IconButton } from 'react-native-paper';
+import { Tooltip, Divider } from 'react-native-elements';
+
+import { withTheme, Modal } from 'react-native-paper';
 
 import { AntDesign } from '@expo/vector-icons';
 
-import { retrieveSiteName } from '../../utils/functions';
+import { retrieveSiteName, validator } from '../../utils/functions';
 
 import {
   Content,
@@ -24,13 +26,17 @@ import { storeProduct } from '../../services/storage';
 
 const moment = require('moment');
 
-function Product({ route, navigation, theme }) {
+function Product({ navigation, theme }) {
+  const [errors, setErrors] = useState({
+    name: false,
+    desiredPrice: false,
+  });
   const [name, setName] = useState('');
   const [desiredPrice, setDesiredPrice] = useState('');
   const [formattedDesireDate, setFormattedDesiredDate] = useState(null);
   const [visible, setVisible] = useState(false);
   const [desiredDate, setDesiredDate] = useState(
-    moment().add(1, 'week').format('YYYY-MM-DD')
+    moment().add(8, 'days').format('YYYY-MM-DD')
   );
 
   const [quotations, setQuotations] = useState([]);
@@ -54,6 +60,21 @@ function Product({ route, navigation, theme }) {
   }, [desiredDate]);
 
   async function handleSaveProduct() {
+    const validate = validator([
+      { field: 'name', value: name },
+      { field: 'desiredPrice', value: desiredPrice },
+    ]);
+
+    if (validate.length !== 0) {
+      let newErrors = {};
+      for (const validation of validate) {
+        newErrors[validation.field] = true;
+      }
+
+      setErrors(newErrors);
+      return;
+    }
+
     await storeProduct({
       name,
       desiredPrice,
@@ -65,17 +86,20 @@ function Product({ route, navigation, theme }) {
     });
 
     resetFields();
-
     navigation.navigate('Home');
   }
 
   function resetFields() {
-    setName('');
-    setDesiredPrice('');
     setDesiredDate(moment().add(1, 'week').format('YYYY-MM-DD'));
     setQuotations([]);
-    setSite('');
-    setValue('');
+    setSite(null);
+    setName(null);
+    setDesiredPrice(null);
+    setValue(null);
+    setErrors({
+      name: false,
+      desiredPrice: false,
+    });
   }
 
   function handleAddQuotation() {
@@ -92,13 +116,15 @@ function Product({ route, navigation, theme }) {
       },
     ];
     setQuotations(newQuotations);
-    setSite('');
-    setValue('');
+    setSite(null);
+    setValue(null);
+    setErrors({ ...errors, site: false, value: false });
   }
 
   function removeFromQuotions(idx) {
-    setQuotations(quotations.filter((item, i) => i !== idx));
+    setQuotations(quotations.filter((_, i) => i !== idx));
   }
+
   return (
     <Container>
       <Navbar>
@@ -109,46 +135,94 @@ function Product({ route, navigation, theme }) {
             name={'arrowleft'}
           />
         </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => console.log('AJUDA')}>
-          <AntDesign size={28} color={theme.colors.primary} name={'question'} />
-        </TouchableOpacity>
+        <Tooltip
+          containerStyle={{
+            height: 'auto',
+          }}
+          overlayColor='transparent'
+          popover={
+            <Typography color={theme.colors.inactive} fontSize={12}>
+              Preencha os campos abaixo com o nome do produto e o preço de
+              compra desejado.
+            </Typography>
+          }
+        >
+          <AntDesign
+            size={28}
+            color={theme.colors.primary}
+            name={'questioncircleo'}
+          />
+        </Tooltip>
       </Navbar>
       <Content>
         <ScrollView showsVerticalScrollIndicator={false}>
           <Input
             mb={10}
             mode='outlined'
-            label='Nome'
+            placeholder='Produto Exemplo'
+            label='Nome do produto *'
             value={name}
-            onChange={(e) => setName(e.nativeEvent.text)}
+            onChangeText={(text) => {
+              setName(text);
+              setErrors({ ...errors, name: false });
+            }}
+            inputContainerStyle={{
+              borderBottomColor: `${errors.name ? 'red' : '#86939e'}`,
+            }}
+            labelStyle={{
+              color: `${errors.name ? 'red' : '#86939e'}`,
+            }}
           />
 
-          <Input
-            mb={10}
-            mode='outlined'
-            keyboardType={'number-pad'}
-            label='Preço de compra desejado'
-            value={desiredPrice}
-            onChange={(e) => setDesiredPrice(e.nativeEvent.text)}
-          />
+          <Row mb={25} mt={25}>
+            <Input
+              mode='outlined'
+              keyboardType={'number-pad'}
+              label='Preço de compra desejado *'
+              placeholder={'1000'}
+              value={desiredPrice}
+              onChangeText={(text) => {
+                setDesiredPrice(text.replace(/\D/g, ''));
+                setErrors({ ...errors, desiredPrice: false });
+              }}
+              inputContainerStyle={{
+                borderBottomColor: `${errors.desiredPrice ? 'red' : '#86939e'}`,
+              }}
+              labelStyle={{
+                color: `${errors.desiredPrice ? 'red' : '#86939e'}`,
+              }}
+            />
+          </Row>
 
           <Row mb={25}>
             <Input
-              minWidth={'100%'}
               mode='outlined'
               disabled
               value={formattedDesireDate}
               label='Data máxima para compra'
+              style={{ width: '100%' }}
             />
 
-            <IconButton
-              style={{ position: 'absolute', right: 0, height: '100%' }}
-              color={theme.colors.secondary}
-              icon='calendar'
-              size={30}
+            <TouchableOpacity
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                position: 'absolute',
+                right: 0,
+                top: '10%',
+                height: '90%',
+                paddingLeft: 10,
+                paddingRight: 10,
+              }}
               onPress={() => setVisible(true)}
-            />
+            >
+              <AntDesign
+                size={28}
+                color={theme.colors.primary}
+                name={'calendar'}
+              />
+            </TouchableOpacity>
           </Row>
 
           <Divider style={{ backgroundColor: 'black' }} />
@@ -163,11 +237,20 @@ function Product({ route, navigation, theme }) {
               Cotação de valores
             </Typography>
 
-            <AntDesign
-              size={30}
-              color={theme.colors.primary}
-              name={'questioncircle'}
-            />
+            <Tooltip
+              overlayColor='transparent'
+              popover={
+                <Typography color={theme.colors.inactive} fontSize={10}>
+                  Cole os links do produto e informe os valores
+                </Typography>
+              }
+            >
+              <AntDesign
+                size={28}
+                color={theme.colors.primary}
+                name={'questioncircleo'}
+              />
+            </Tooltip>
           </Row>
 
           {quotations.length > 0 &&
@@ -196,26 +279,19 @@ function Product({ route, navigation, theme }) {
                   </TouchableOpacity>
                 </Row>
                 <Input
+                  disabled
                   dense
                   mb={10}
                   mt={10}
                   mode='outlined'
                   value={q.site}
-                  onChange={(e) => {
-                    quotations[idx].site = e.nativeEvent.text;
-                    setQuotations([...quotations]);
-                  }}
                   label='Site'
                 />
                 <Input
+                  disabled
                   dense
-                  minWidth={'100%'}
                   mode='outlined'
                   value={q.value}
-                  onChange={(e) => {
-                    quotations[idx].value = e.nativeEvent.text;
-                    setQuotations([...quotations]);
-                  }}
                   keyboardType={'number-pad'}
                   label='Valor'
                 />
@@ -224,28 +300,35 @@ function Product({ route, navigation, theme }) {
 
           <Container padding={10}>
             <Input
-              mb={10}
-              mode='flat'
+              mode='outlined'
+              label='Site *'
+              placeholder='https://www.exemplo.com.br/produto'
               value={site}
-              label='Site'
-              style={{ backgroundColor: '#fff' }}
-              onChange={(e) => setSite(e.nativeEvent.text)}
+              onChangeText={(text) => {
+                setSite(text);
+              }}
             />
+
             <Input
-              minWidth={'100%'}
-              mode='flat'
-              style={{ backgroundColor: '#fff' }}
+              mode='outlined'
+              label='Valor *'
               value={value}
-              keyboardType={'number-pad'}
-              label='Valor'
-              onChange={(e) => setValue(e.nativeEvent.text)}
+              placeholder='1000'
+              keyboardType='number-pad'
+              onChangeText={(text) => {
+                setValue(text.replace(/\D/g, ''));
+              }}
             />
+
             <Row justify='flex-end'>
               <Button
-                style={{ marginTop: 10 }}
+                mt={10}
+                disabled={
+                  site === null || site === '' || value === null || value === ''
+                }
                 color={theme.colors.primary}
                 mode='contained'
-                onPress={() => handleAddQuotation()}
+                onPress={handleAddQuotation}
               >
                 Adicionar
               </Button>

@@ -4,7 +4,11 @@ import { ScrollView } from 'react-native';
 
 import { withTheme } from 'react-native-paper';
 
+import { Tooltip } from 'react-native-elements';
+
 import { AntDesign } from '@expo/vector-icons';
+
+import { retrieveSiteName } from '../../utils/functions';
 
 import {
   Content,
@@ -21,13 +25,12 @@ import { putProduct } from '../../services/storage';
 function Price({ route, navigation, theme }) {
   const [name, setName] = useState('');
   const [quotations, setQuotations] = useState([]);
-  const [site, setSite] = useState('');
-  const [value, setValue] = useState('');
+  const [site, setSite] = useState(null);
+  const [value, setValue] = useState(null);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       const { name: prodName, quotations: prodQuotations } = route.params;
-
       setName(prodName);
       setQuotations(prodQuotations);
     });
@@ -36,22 +39,39 @@ function Price({ route, navigation, theme }) {
   }, [navigation]);
 
   function handleAddQuotation() {
-    let newQuotations = [
-      ...quotations,
-      { site, value, created_at: new Date(), update_at: new Date() },
-    ];
-    setQuotations(newQuotations);
-    setSite('');
-    setValue('');
+    if (site && value) {
+      const siteName = retrieveSiteName(site);
+
+      let newQuotations = [
+        ...quotations,
+        {
+          site,
+          siteName,
+          value,
+          created_at: new Date(),
+          update_at: new Date(),
+        },
+      ];
+      setQuotations(newQuotations);
+      setSite(null);
+      setValue(null);
+    }
   }
 
   function removeFromQuotions(idx) {
-    setQuotations(quotations.filter((item, i) => i !== idx));
+    setQuotations(quotations.filter((_, i) => i !== idx));
   }
 
   async function handleSaveProduct() {
+    let sanatizedArray = [];
+    quotations.map((q) => {
+      if (q && q.site && q.value) {
+        sanatizedArray.push(q);
+      }
+    });
+
     await putProduct(route.params.id, {
-      quotations,
+      quotations: sanatizedArray,
       update_at: new Date(),
     });
     navigation.navigate('Home');
@@ -66,12 +86,34 @@ function Price({ route, navigation, theme }) {
           color={theme.colors.primary}
           name={'arrowleft'}
         />
-        <AntDesign size={28} color={theme.colors.primary} name={'question'} />
+        <Tooltip
+          containerStyle={{
+            height: 'auto',
+          }}
+          overlayColor='transparent'
+          popover={
+            <Typography color={theme.colors.inactive} fontSize={12}>
+              Altere ou adicione os links com os valores do produto que deseja
+              comprar
+            </Typography>
+          }
+        >
+          <AntDesign
+            size={28}
+            color={theme.colors.primary}
+            name={'questioncircleo'}
+          />
+        </Tooltip>
       </Navbar>
 
       <Content>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Typography align='center' color='#2E5E96' uppercase fontSize={25}>
+          <Typography
+            align='center'
+            color={theme.colors.primary}
+            uppercase
+            fontSize={25}
+          >
             {name}
           </Typography>
 
@@ -103,19 +145,19 @@ function Price({ route, navigation, theme }) {
                   mt={10}
                   mode='outlined'
                   value={q.site}
-                  onChange={(e) => {
-                    quotations[idx].site = e.nativeEvent.text;
-
+                  onChangeText={(text) => {
+                    quotations[idx].site = text;
                     setQuotations([...quotations]);
                   }}
-                  label='Site'
+                  placeholder='https://www.exemplo.com.br/produto'
+                  label='Site *'
                 />
                 <Input
                   dense
                   minWidth={'100%'}
                   mode='outlined'
-                  onChange={(e) => {
-                    quotations[idx].value = e.nativeEvent.text;
+                  onChangeText={(text) => {
+                    quotations[idx].value = text.replace(/\D/g, '');
                     setQuotations([...quotations]);
                   }}
                   value={q.value}
@@ -127,28 +169,31 @@ function Price({ route, navigation, theme }) {
 
           <Container mt={10} padding={10}>
             <Input
-              mb={10}
-              mode='flat'
               value={site}
-              label='Site'
-              style={{ backgroundColor: '#fff' }}
-              onChange={(e) => setSite(e.nativeEvent.text)}
+              placeholder='https://www.exemplo.com.br/produto'
+              label='Site *'
+              onChangeText={(text) => {
+                setSite(text);
+              }}
             />
             <Input
-              minWidth={'100%'}
-              mode='flat'
-              style={{ backgroundColor: '#fff' }}
               value={value}
               keyboardType={'number-pad'}
+              placeholder='1000'
               label='Valor'
-              onChange={(e) => setValue(e.nativeEvent.text)}
+              onChangeText={(text) => {
+                setValue(text.replace(/\D/g, ''));
+              }}
             />
             <Row justify='flex-end'>
               <Button
                 style={{ marginTop: 10 }}
                 color={theme.colors.primary}
+                disabled={
+                  site === null || site === '' || value === null || value === ''
+                }
                 mode='contained'
-                onPress={() => handleAddQuotation()}
+                onPress={handleAddQuotation}
               >
                 Adicionar
               </Button>

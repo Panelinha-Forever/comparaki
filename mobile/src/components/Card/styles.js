@@ -20,7 +20,7 @@ export const Content = styled.View`
 `;
 
 export const Toolbar = styled.View`
-  background: #191fb4;
+  background: #312298;
   justify-content: space-around;
   align-items: center;
   width: 15%;

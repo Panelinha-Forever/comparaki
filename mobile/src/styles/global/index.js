@@ -2,6 +2,8 @@ import styled from 'styled-components/native';
 
 import { TextInput, Button as PaperButton } from 'react-native-paper';
 
+import { Input as InputElement } from 'react-native-elements';
+
 export const Typography = styled.Text`
   font-size: ${({ fontSize }) => `${fontSize || 20}px`};
   color: ${({ color }) => color || '#000'};
@@ -22,7 +24,7 @@ export const Content = styled.View`
 
 export const Container = styled.View`
   height: ${({ height }) => `${height || '100%'}`};
-  width: 100%;
+  width: ${({ width }) => `${width || '100%'}`};
   flex: 1;
 
   ${({ border }) => border && `border: 1px solid #ccc;`}
@@ -80,7 +82,8 @@ export const Col = styled.View`
   margin-right: ${({ mr }) => `${mr || 0}px`};
 `;
 
-export const Input = styled(TextInput)`
+export const Input = styled(InputElement)`
+  border: 1px solid red;
   margin: ${({ ma }) => `${ma || 0}px`};
   margin-top: ${({ mt }) => `${mt || 0}px`};
   margin-bottom: ${({ mb }) => `${mb || 0}px`};

@@ -1,28 +1,33 @@
 const retrieveSiteName = (site) => {
-  let nome_do_site;
-  let separaporbarra = site.split('/');
-  if (
-    separaporbarra.indexOf('https:') != -1 ||
-    separaporbarra.indexOf('http:') != -1
-  ) {
-    let nomes = separaporbarra[2].split('.');
-    if (nomes.indexOf('www') != -1) {
-      nome_do_site = nomes[1];
-    } else {
-      nome_do_site = nomes[0];
-    }
-  } else {
-    let nomes = separaporbarra[0].split('.');
-    if (nomes.indexOf('www') != -1) {
-      nome_do_site = nomes[1];
-    } else {
-      nome_do_site = nomes[0];
+  const firstDotIndex = site.indexOf('.');
+  const secondDotIndex = site.lastIndexOf('.');
+
+  if (firstDotIndex !== -1 && secondDotIndex !== -1) {
+    return site.substring(firstDotIndex + 1, secondDotIndex);
+  }
+
+  return site;
+};
+
+const validator = (items) => {
+  let validate = [];
+  for (const item of items) {
+    switch (item.field) {
+      default:
+        if (!item.value || item.value === '') {
+          validate.push({
+            field: item.field,
+            rule: 'required',
+          });
+        }
+        break;
     }
   }
 
-  return nome_do_site;
+  return validate;
 };
 
 module.exports = {
   retrieveSiteName,
+  validator,
 };

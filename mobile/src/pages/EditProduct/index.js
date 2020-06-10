@@ -4,17 +4,33 @@ import { ScrollView, TouchableOpacity } from 'react-native';
 
 import { withTheme, Button, Modal, IconButton } from 'react-native-paper';
 
+import { Tooltip } from 'react-native-elements';
+
 import { AntDesign } from '@expo/vector-icons';
 
-import { Content, Container, Row, Input, Navbar } from '../../styles/global';
+import {
+  Content,
+  Typography,
+  Container,
+  Row,
+  Input,
+  Navbar,
+} from '../../styles/global';
 
 import Calendar from '../../components/Calendar';
 
 import { putProduct, deleteProduct } from '../../services/storage';
 
+import { validator } from '../../utils/functions';
+
 const moment = require('moment');
 
 function EditProduct({ route, navigation, theme }) {
+  const [errors, setErrors] = useState({
+    name: false,
+    desiredPrice: false,
+  });
+
   const [name, setName] = useState('');
   const [desiredPrice, setDesiredPrice] = useState('');
   const [formattedDesireDate, setFormattedDesiredDate] = useState(null);
@@ -38,12 +54,32 @@ function EditProduct({ route, navigation, theme }) {
       setDesiredPrice(prodDesiredPrice);
       setFormattedDesiredDate(prodFormattedDesireDate);
       setDesiredDate(prodDesiredDate);
+
+      setErrors({
+        name: false,
+        desiredPrice: false,
+      });
     });
 
     return unsubscribe;
   }, [navigation]);
 
   async function handleSaveProduct() {
+    const validate = validator([
+      { field: 'name', value: name },
+      { field: 'desiredPrice', value: desiredPrice },
+    ]);
+
+    if (validate.length !== 0) {
+      let newErrors = {};
+      for (const validation of validate) {
+        newErrors[validation.field] = true;
+      }
+
+      setErrors(newErrors);
+      return;
+    }
+
     await putProduct(route.params.id, {
       name,
       desiredPrice,
@@ -74,9 +110,20 @@ function EditProduct({ route, navigation, theme }) {
         <TouchableOpacity onPress={deleteProductRequest}>
           <AntDesign size={28} color={theme.colors.error} name={'delete'} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => console.log('Ajuda')}>
-          <AntDesign size={28} color={theme.colors.primary} name={'question'} />
-        </TouchableOpacity>
+        <Tooltip
+          overlayColor='transparent'
+          popover={
+            <Typography color={theme.colors.inactive} fontSize={12}>
+              Edite o produto que deseja comprar
+            </Typography>
+          }
+        >
+          <AntDesign
+            size={28}
+            color={theme.colors.primary}
+            name={'questioncircleo'}
+          />
+        </Tooltip>
       </Navbar>
 
       <Content>
@@ -86,7 +133,16 @@ function EditProduct({ route, navigation, theme }) {
             mode='outlined'
             label='Nome'
             value={name}
-            onChange={(e) => setName(e.nativeEvent.text)}
+            onChangeText={(text) => {
+              setName(text);
+              setErrors({ ...errors, name: false });
+            }}
+            inputContainerStyle={{
+              borderBottomColor: `${errors.name ? 'red' : '#86939e'}`,
+            }}
+            labelStyle={{
+              color: `${errors.name ? 'red' : '#86939e'}`,
+            }}
           />
 
           <Input
@@ -95,7 +151,16 @@ function EditProduct({ route, navigation, theme }) {
             keyboardType={'number-pad'}
             label='Preço de compra desejado'
             value={desiredPrice}
-            onChange={(e) => setDesiredPrice(e.nativeEvent.text)}
+            onChangeText={(text) => {
+              setDesiredPrice(text);
+              setErrors({ ...errors, desiredPrice: false });
+            }}
+            inputContainerStyle={{
+              borderBottomColor: `${errors.desiredPrice ? 'red' : '#86939e'}`,
+            }}
+            labelStyle={{
+              color: `${errors.desiredPrice ? 'red' : '#86939e'}`,
+            }}
           />
 
           <Row mb={25}>
@@ -109,7 +174,7 @@ function EditProduct({ route, navigation, theme }) {
 
             <IconButton
               style={{ position: 'absolute', right: 0, height: '100%' }}
-              color={theme.colors.secondary}
+              color={theme.colors.primary}
               icon='calendar'
               size={30}
               onPress={() => setVisible(true)}
@@ -117,10 +182,9 @@ function EditProduct({ route, navigation, theme }) {
           </Row>
 
           <Button
-            style={{ marginTop: 30 }}
             color={theme.colors.secondary}
             mode='contained'
-            onPress={() => handleSaveProduct()}
+            onPress={handleSaveProduct}
           >
             Salvar
           </Button>

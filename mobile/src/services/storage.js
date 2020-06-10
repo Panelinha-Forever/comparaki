@@ -26,6 +26,8 @@ export const putProduct = async function (id, newProduct) {
     ...newProduct,
   };
 
+  let teste = JSON.parse(await AsyncStorage.getItem('products'));
+
   await AsyncStorage.setItem('products', JSON.stringify(savedProducts));
 };
 

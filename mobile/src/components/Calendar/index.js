@@ -8,6 +8,8 @@ import { Row } from '../../styles/global';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+const moment = require('moment');
+
 import CalendarPicker from 'react-native-calendar-picker';
 
 export default function Calendar({ setModalVisibility, setDate, date }) {
@@ -47,9 +49,8 @@ export default function Calendar({ setModalVisibility, setDate, date }) {
           setDate(day);
           setModalVisibility(false);
         }}
-        minDate={new Date()}
-        todayBackgroundColor={'transparent'}
-        selectedDayColor={Theme.colors.primary}
+        minDate={moment().add(1, 'day')}
+        selectedDayColor={Theme.colors.primaryLighten}
         todayBackgroundColor={'#c5c5c5'}
         todayTextStyle={'black'}
         selectedDayTextColor={'white'}
