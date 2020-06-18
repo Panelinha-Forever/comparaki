@@ -9,12 +9,12 @@ import {
   TransitionPresets,
 } from '@react-navigation/stack';
 
-import { HomeTabNavigator } from './tabNavigation';
-
 const Stack = createStackNavigator();
 
 import EditProduct from '../pages/EditProduct';
+import Product from '../pages/Product';
 import Price from '../pages/Price';
+import Home from '../pages/Home';
 
 export default function App() {
   return (
@@ -36,8 +36,15 @@ export default function App() {
         <Stack.Screen
           options={{ title: 'COMPARAKI' }}
           name='Home'
-          component={HomeTabNavigator}
+          component={Home}
         />
+
+        <Stack.Screen
+          options={{ title: 'ADICIONAR PRODUTO' }}
+          name='Product'
+          component={Product}
+        />
+
         <Stack.Screen
           options={{
             title: 'EDIÇÃO DE PRODUTO',
@@ -45,6 +52,7 @@ export default function App() {
           name='EditProduct'
           component={EditProduct}
         />
+
         <Stack.Screen
           options={{
             title: 'ATUALIZAÇÃO DE VALORES',

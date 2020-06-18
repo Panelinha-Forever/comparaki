@@ -1,11 +1,12 @@
 import styled from 'styled-components/native';
 
-import { TextInput, Button as PaperButton } from 'react-native-paper';
+import { Button as PaperButton } from 'react-native-paper';
 
 import { Input as InputElement } from 'react-native-elements';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export const Typography = styled.Text`
-  font-size: ${({ fontSize }) => `${fontSize || 20}px`};
+  font-size: ${({ fontSize }) => `${fontSize || 12}px`};
   color: ${({ color }) => color || '#000'};
   font-weight: ${({ fontWeight }) => fontWeight || 'normal'};
   text-transform: ${({ uppercase }) => (uppercase && 'uppercase') || 'none'};
@@ -84,6 +85,7 @@ export const Col = styled.View`
 
 export const Input = styled(InputElement)`
   border: 1px solid red;
+  height: 50px;
   margin: ${({ ma }) => `${ma || 0}px`};
   margin-top: ${({ mt }) => `${mt || 0}px`};
   margin-bottom: ${({ mb }) => `${mb || 0}px`};

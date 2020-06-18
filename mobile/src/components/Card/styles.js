@@ -1,11 +1,14 @@
 import styled from 'styled-components/native';
 
+import { TouchableOpacity } from 'react-native';
+
 export const Container = styled.View`
   border: 0.5px solid #c4c4c4;
   margin-bottom: 20px;
   display: flex;
   flex: 1;
   flex-direction: row;
+  height: 180px;
 `;
 
 export const Image = styled.Image`
@@ -21,19 +24,16 @@ export const Content = styled.View`
 
 export const Toolbar = styled.View`
   background: #312298;
+  width: 15%;
+  display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 15%;
 `;
 
-// export const Title = styled.View`
-//   position: absolute;
-//   left: 15px;
-//   padding: 15px;
-//   padding-bottom: 40px;
-//   border-top-right-radius: 10px;
-//   border-top-left-radius: 10px;
-//   border-bottom-left-radius: 10px;
-//   border-bottom-right-radius: 10px;
-//   background-color: #2f2cb9;
-// `;
+export const SideButton = styled(TouchableOpacity)`
+  display: flex;
+  width: 100%;
+  height: 33%;
+  align-items: center;
+  justify-content: center;
+`;

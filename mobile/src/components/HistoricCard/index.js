@@ -96,7 +96,6 @@ export default function HistoricCard({
           <>
             <Typography
               uppercase
-              fontSize={12}
               color={'#505050'}
               align={'left'}
               fontWeight={'bold'}
@@ -104,7 +103,6 @@ export default function HistoricCard({
               {`SITE: `}
               <Typography
                 uppercase
-                fontSize={12}
                 fontWeight={'bold'}
                 color={theme.colors.primary}
               >
@@ -113,52 +111,34 @@ export default function HistoricCard({
             </Typography>
             <Typography
               uppercase
-              fontSize={12}
               color={'#505050'}
               align={'left'}
               fontWeight={'bold'}
             >
               {`VALOR: `}
-              <Typography
-                uppercase
-                fontSize={12}
-                fontWeight={'bold'}
-                color={'#4200FF'}
-              >
+              <Typography uppercase fontWeight={'bold'} color={'#4200FF'}>
                 {`R$${product.desiredPrice} `}
               </Typography>
             </Typography>
             <Typography
               uppercase
-              fontSize={12}
               color={'#505050'}
               align={'left'}
               fontWeight={'bold'}
             >
               {`ÚLTIMA ATUALIZAÇÃO: `}
-              <Typography
-                uppercase
-                fontSize={12}
-                fontWeight={'bold'}
-                color={'#4200FF'}
-              >
+              <Typography uppercase fontWeight={'bold'} color={'#4200FF'}>
                 {`${moment(bestOffer.created_at).format('DD/MM/YYYY')} `}
               </Typography>
             </Typography>
             <Typography
               uppercase
-              fontSize={12}
               color={'#505050'}
               align={'left'}
               fontWeight={'bold'}
             >
               {`VALOR DESEJADO: `}
-              <Typography
-                uppercase
-                fontSize={12}
-                fontWeight={'bold'}
-                color={'#4200FF'}
-              >
+              <Typography uppercase fontWeight={'bold'} color={'#4200FF'}>
                 {`R$${product.desiredPrice} `}
               </Typography>
             </Typography>
@@ -167,7 +147,6 @@ export default function HistoricCard({
           <>
             <Typography
               uppercase
-              fontSize={12}
               color={'#505050'}
               align={'center'}
               fontWeight={'bold'}
